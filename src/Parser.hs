@@ -37,6 +37,8 @@ lis = makeTokenParser
                         , "!="
                         , ";"
                         , ","
+                        , "++"
+                        , "--"
                         ]
     }
   )
@@ -44,10 +46,51 @@ lis = makeTokenParser
 -----------------------------------
 --- Parser de expresiones enteras
 -----------------------------------
+
+{-
+
+-}
+
+
 intexp :: Parser (Exp Int)
-intexp = undefined
+intexp = chainl1 termParser addMinusOp
+
+addMinusOp :: Parser (Exp Int -> Exp Int -> Exp Int)
+addMinusOp = try (do {reservedOp lis "+" ; return Plus}) <|>
+                  do {reservedOp lis "-" ; return Minus}
 
 
+
+termParser :: Parser (Exp Int)
+termParser = chainl1 factorParser mulDivOp
+
+mulDivOp :: Parser (Exp Int -> Exp Int -> Exp Int)
+mulDivOp = try (do {reservedOp lis "*" ; return Times}) <|>
+                do {reservedOp lis "/" ; return Div}
+                 
+
+factorParser :: Parser (Exp Int)
+factorParser =  try (do reservedOp lis "-"
+                        f <- factorParser
+                        return (UMinus f))
+                <|> atomParser
+
+
+atomParser :: Parser (Exp Int)
+atomParser = try (do parens lis intexp)
+             <|> 
+             (try (do i <- identifier lis
+                      reservedOp lis "++"
+                      return (VarInc i)))
+             <|> 
+             (try (do i <- identifier lis
+                      reservedOp lis "--"
+                      return (VarDec i)))
+             <|>
+             (try (do i <- identifier lis
+                      return (Var i)))
+             <|> (do n <- natural lis
+                     return (Const (fromInteger n)))
 ------------------------------------
 --- Parser de expresiones booleanas
 ------------------------------------
