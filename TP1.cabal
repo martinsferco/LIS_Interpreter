@@ -1,0 +1,110 @@
+cabal-version: 2.2
+
+-- This file has been generated from package.yaml by hpack version 0.37.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           TP1
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/TP1#readme>
+homepage:       https://github.com/githubuser/TP1#readme
+bug-reports:    https://github.com/githubuser/TP1/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2024 Author name here
+license:        BSD-3-Clause
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/TP1
+
+library
+  exposed-modules:
+      AST
+      Eval1
+      Eval2
+      Eval3
+      Parser
+      PPLis
+  other-modules:
+      Paths_TP1
+  autogen-modules:
+      Paths_TP1
+  hs-source-dirs:
+      src
+  default-extensions:
+      GADTs
+      StandaloneDeriving
+      PatternSynonyms
+      FlexibleInstances
+      TupleSections
+      MultiWayIf
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-depends:
+      HUnit
+    , base >=4.7 && <5
+    , containers
+    , parsec
+    , pretty
+    , strict
+  default-language: Haskell2010
+
+executable TP1-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_TP1
+  autogen-modules:
+      Paths_TP1
+  hs-source-dirs:
+      app
+  default-extensions:
+      GADTs
+      StandaloneDeriving
+      PatternSynonyms
+      FlexibleInstances
+      TupleSections
+      MultiWayIf
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      HUnit
+    , TP1
+    , base >=4.7 && <5
+    , containers
+    , parsec
+    , pretty
+    , strict
+  default-language: Haskell2010
+
+test-suite TP1-test
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+      Eval1Tests
+      ParserTests
+      Paths_TP1
+  autogen-modules:
+      Paths_TP1
+  hs-source-dirs:
+      tests
+  default-extensions:
+      GADTs
+      StandaloneDeriving
+      PatternSynonyms
+      FlexibleInstances
+      TupleSections
+      MultiWayIf
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      HUnit
+    , TP1
+    , base >=4.7 && <5
+    , containers
+    , parsec
+    , pretty
+    , strict
+  default-language: Haskell2010
