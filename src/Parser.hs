@@ -59,8 +59,6 @@ addMinusOp :: Parser (Exp Int -> Exp Int -> Exp Int)
 addMinusOp = try (do {reservedOp lis "+" ; return Plus}) <|>
                   do {reservedOp lis "-" ; return Minus}
 
-
-
 termParser :: Parser (Exp Int)
 termParser = chainl1 factorParser mulDivOp
 
@@ -76,8 +74,9 @@ factorParser =  try (do reservedOp lis "-"
                 <|> atomParser
 
 
+-- !! Se puede optimizar para identifier
 atomParser :: Parser (Exp Int)
-atomParser = try (do parens lis intexp)
+atomParser = try (parens lis intexp)
              <|> 
              (try (do i <- identifier lis
                       reservedOp lis "++"
@@ -89,25 +88,53 @@ atomParser = try (do parens lis intexp)
              <|>
              (try (do i <- identifier lis
                       return (Var i)))
+             
              <|> (do n <- natural lis
                      return (Const (fromInteger n)))
+
 ------------------------------------
 --- Parser de expresiones booleanas
 ------------------------------------
 
 boolexp :: Parser (Exp Bool)
-boolexp = undefined
+boolexp = chainl1 orTermParser ( do { reservedOp lis "||" ; return Or })
+
+orTermParser :: Parser (Exp Bool)
+orTermParser = chainl1 andTermParser ( do { reservedOp lis "&&" ; return And })
+
+andTermParser :: Parser (Exp Bool)
+andTermParser = try (do reservedOp lis "!"
+                        ap <- andTermParser
+                        return (Not ap))
+                
+                <|> atomBoolParser
+
+atomBoolParser :: Parser (Exp Bool)
+atomBoolParser = (try (parens lis boolexp)) <|> 
+                 (try ( do { e1 <- intexp ; reservedOp lis "==" ; e2 <- intexp ; return (Eq e1 e2)  })) <|>
+                 (try ( do { e1 <- intexp ; reservedOp lis "!=" ; e2 <- intexp ; return (NEq e1 e2) })) <|>
+                 (try ( do { e1 <- intexp ; reservedOp lis "<"  ; e2 <- intexp ; return (Lt e1 e2)  })) <|>
+                 (try ( do { e1 <- intexp ; reservedOp lis ">"  ; e2 <- intexp ; return (Gt e1 e2)  })) <|>
+                 (try ( do { reserved lis "false" ; return BFalse } ))                         <|>
+                     (  do { reserved lis "true"  ; return BTrue  })
 
 -----------------------------------
 --- Parser de comandos
 -----------------------------------
 
 comm :: Parser Comm
-comm = undefined
+comm = chainl1 stmtParser ( do reservedOp lis ";" ; return Seq)
 
+stmtParser :: Parser Comm
+stmtParser = (try ( do { reserved lis "skip" ; return Skip })) <|> 
+             (try ( do { i <- identifier lis ; reservedOp lis "=" ; e <- intexp ; return (Let i e) })) <|> 
+             (try ( do { reserved lis "repeat" ; c <- (braces lis comm) ; reserved lis "until" ; b <- boolexp ; return (RepeatUntil c b)})) <|> 
+             (try ( do { reserved lis "if" ; b <- boolexp ; c1 <- (braces lis comm) ; reserved lis "else" ; c2 <- (braces lis comm) ; return (IfThenElse b c1 c2) })) <|> 
+                 (  do { reserved lis "if" ; b <- boolexp ; c  <- (braces lis comm) ; return (IfThen b c) })
 
 ------------------------------------
 -- Función de parseo
 ------------------------------------
+
 parseComm :: SourceName -> String -> Either ParseError Comm
 parseComm = parse (totParser comm)
