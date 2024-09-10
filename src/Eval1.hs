@@ -12,19 +12,18 @@ import           Data.Strict.Tuple
 type State = M.Map Variable Int
 
 -- Estado vacío
--- Completar la definición
 initState :: State
-initState = undefined
+initState = M.empty
 
 -- Busca el valor de una variable en un estado
 -- Completar la definición
 lookfor :: Variable -> State -> Int
-lookfor = undefined
+lookfor = M.lookup
 
 -- Cambia el valor de una variable en un estado
 -- Completar la definición
 update :: Variable -> Int -> State -> State
-update = undefined
+update var n = M.update (\_ -> Just n) var
 
 -- Evalúa un programa en el estado vacío
 eval :: Comm -> State
@@ -39,7 +38,7 @@ stepCommStar c    s = Data.Strict.Tuple.uncurry stepCommStar $ stepComm c s
 -- Evalúa un paso de un comando en un estado dado
 -- Completar la definición
 stepComm :: Comm -> State -> Pair Comm State
-stepComm = undefined
+stepComm = undefined 
 
 -- Evalúa una expresión
 -- Completar la definición
