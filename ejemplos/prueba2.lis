@@ -1,0 +1,7 @@
+x = 0;
+repeat {
+  skip
+
+} until true;
+
+y = x

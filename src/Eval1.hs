@@ -17,13 +17,13 @@ initState = M.empty
 
 -- Busca el valor de una variable en un estado
 lookfor :: Variable -> State -> Int
-lookfor x s = case M.lookup x s of
-                Nothing -> error "ERROR"
+lookfor v s = case M.lookup v s of
+                Nothing -> error "ERROR: key not found"
                 Just n  -> n
 
 -- Cambia el valor de una variable en un estado
 update :: Variable -> Int -> State -> State
-update var n = M.update (\_ -> Just n) var
+update = M.insert  
 
 -- Evalúa un programa en el estado vacío
 eval :: Comm -> State
@@ -37,7 +37,7 @@ stepCommStar c    s = Data.Strict.Tuple.uncurry stepCommStar $ stepComm c s
 
 -- Evalúa un paso de un comando en un estado dado
 stepComm :: Comm -> State -> Pair Comm State
-stepComm (Let v e)            s = (Skip :!: update v n s) where (n :!: _) = (evalExp e s)
+stepComm (Let v e)            s = (Skip :!: update v n s') where (n :!: s') = (evalExp e s)
 stepComm (Seq Skip c1)        s = (c1 :!: s)   
 stepComm (Seq c0 c1)          s = let (c0':!: s') = stepComm c0 s 
                                   in  ((Seq c0' c1) :!: s')
@@ -64,10 +64,12 @@ evalExp (Times e0 e1) s = let (n0 :!: s') = evalExp e0 s
 evalExp (Div e0 e1) s = let (n0 :!: s') = evalExp e0 s
                             (n1 :!: s'') = evalExp e1 s'
                         in (n0 `div` n1 :!: s'')
+
 evalExp (VarInc x) s = let x' = lookfor x s + 1
-                       in (x' :!: update x x' s)
+                       in (x' :!: (update x x' s))
+
 evalExp (VarDec x) s = let x' = lookfor x s - 1
-                       in (x' :!: update x x' s)
+                       in (x' :!: (update x x' s))
 evalExp BTrue  s = (True :!: s)         
 evalExp BFalse s = (False :!: s)         
 
@@ -96,3 +98,7 @@ evalExp (NEq e0 e1) s = let (n0 :!: s') = evalExp e0 s
                             (n1 :!: s'') = evalExp e1 s'
                         in (n0 /= n1 :!: s'')
 
+prog = Seq (Seq (Let "n" (Const 25)) 
+                    (Let "i" (UMinus (Const 1)))) 
+               (RepeatUntil (Seq (Let "i" (Plus (Var "i") (Const 1))) (Let "t" (Times (Var "i") (Var "i")))) 
+                            (Or (Gt (Var "t") (Var "n")) (Eq (Var "t") (Var "n"))))
