@@ -18,7 +18,7 @@ initState = M.empty
 -- Busca el valor de una variable en un estado
 lookfor :: Variable -> State -> Int
 lookfor v s = case M.lookup v s of
-                Nothing -> error "ERROR: key not found"
+                Nothing -> error "ERROR: key not found" -- ?? Como manejo esto
                 Just n  -> n
 
 -- Cambia el valor de una variable en un estado
