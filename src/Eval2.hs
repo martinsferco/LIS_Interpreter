@@ -72,7 +72,7 @@ evalExp (Plus e0 e1)  s = binaryOperation (+) e0 e1 s
 evalExp (Minus e0 e1) s = binaryOperation (-) e0 e1 s
 evalExp (Times e0 e1) s = binaryOperation (*) e0 e1 s
 
--- Podriamos mejorar que no evalue dos veces e1
+-- TODO: Podriamos mejorar que no evalue dos veces la expresion E1
 evalExp (Div e0 e1)   s = case evalExp e1 s of
                             Left error      -> Left error
                             Right (0 :!: _) -> Left DivByZero
