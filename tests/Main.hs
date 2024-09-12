@@ -11,3 +11,4 @@ main = do
     parserTests
     putStrLn "-------------------- Eval 1 tests --------------------"
     eval1Tests
+    
