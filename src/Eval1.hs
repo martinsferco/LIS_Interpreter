@@ -47,6 +47,7 @@ stepComm (RepeatUntil c b)    s = (Seq c c' :!: s)
                                   where c' = (IfThenElse b Skip (RepeatUntil c b)) 
 
 -- Evalúa una expresión
+evalExp :: Exp a -> State -> Pair a State
 evalExp (Const n)     s = n :!: s
 evalExp (Var x)       s = lookfor x s :!: s
 
@@ -67,11 +68,11 @@ evalExp BFalse        s = False :!: s
 evalExp (Lt e0 e1)    s = evalBin (<)   e0 e1 s
 evalExp (Gt e0 e1)    s = evalBin (>)   e0 e1 s 
 
-evalExp (And p0 p1)   s = evalBin (&&)  p0 p1 s
-evalExp (Or p0 p1)    s = evalBin (||)  p0 p1 s
-evalExp (Not p)       s = evalUnary (not) p s
-evalExp (Eq e0 e1)    s = evalBin (==)  e0 e1 s
-evalExp (NEq e0 e1)   s = evalBin (/=)  e0 e1 s
+evalExp (And p0 p1)   s = evalBin (&&)    p0 p1 s
+evalExp (Or p0 p1)    s = evalBin (||)    p0 p1 s
+evalExp (Not p)       s = evalUnary (not) p     s
+evalExp (Eq e0 e1)    s = evalBin (==)    e0 e1 s
+evalExp (NEq e0 e1)   s = evalBin (/=)    e0 e1 s
 
 
 evalBin :: (a -> a -> b) -> Exp a -> Exp a -> State -> Pair b State
