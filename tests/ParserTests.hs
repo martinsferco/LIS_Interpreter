@@ -12,6 +12,7 @@ okTest :: FilePath -> String -> String -> Either ParseError Comm -> Test
 okTest filePath cont msg expected =
   TestCase $ assertEqual msg expected (parseComm filePath cont)
 
+
 -- | Tests cases definition
 
 testSkip :: FilePath -> String -> Test
@@ -39,10 +40,10 @@ tests =
 
 parserTests :: IO Counts
 parserTests = do
-    contents <- mapM (readFile . snd) tests
-    runTestTT $ TestList (apply tests contents)
+    ts <- mapM buildTest tests
+    runTestTT $ TestList ts
 
-apply :: [(a -> b -> c, a)] -> [b] -> [c]
-apply [] _ = []
-apply ((f, x): ts) (y:ys) = f x y : apply ts ys
-apply _ _ = error "Unexpected error for apply"
+buildTest :: (FilePath -> String -> Test, FilePath) -> IO Test
+buildTest (testSpec, fp) = do
+    content <- readFile fp
+    return (testSpec fp content)
