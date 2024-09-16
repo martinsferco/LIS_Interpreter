@@ -24,11 +24,9 @@ lookfor var (m, t) =  case M.lookup var m of
                         Just n  -> Right n
 
 -- Cambia el valor de una variable en un estado
--- ?? El update de la traza deberia estar aca o a nivel de evaluador
 update :: Variable -> Int -> State -> State
 update var n (m, t) = addTrace (showLet var n) (M.insert var n m, t)
 
--- ?? Ver como mejorar el mensaje que se muestra
 showLet :: Variable -> Int -> String
 showLet var n = "Let " ++ var ++ " " ++ show n ++ "\n"
 
