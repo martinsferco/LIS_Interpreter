@@ -15,6 +15,7 @@ testSkip comm = TestCase $ assertEqual msg res (eval comm)
     msg = "Error on skip"
     res = Right (empty, "")
 
+
 testSqrt :: Comm -> Test
 testSqrt comm = TestCase $ assertEqual msg res (eval comm)
   where
@@ -31,21 +32,18 @@ testFib comm = TestCase $ assertEqual msg res (eval comm)
                  "(Let n 4)(Let a 0)(Let b 1)(Let i 2)(Let temp 1)(Let a 1)(Let b 1)(Let i 3)(Let temp 2)(Let a 1)(Let b 2)(Let i 4)(Let temp 3)(Let a 2)(Let b 3)(Let i 5)(Let result 3)")
 
 
-
-
 testError1 :: Comm -> Test
 testError1 comm = TestCase $ assertEqual msg res (eval comm)
   where
     msg = "Error on error1"
     res = Left DivByZero
 
+
 testError2 :: Comm -> Test
 testError2 comm = TestCase $ assertEqual msg res (eval comm)
   where
     msg = "Error on error2"
     res = Left UndefVar
-
-
 
 -- | Tests cases
 

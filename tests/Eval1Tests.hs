@@ -15,11 +15,13 @@ testSkip comm = TestCase $ assertEqual msg res (eval comm)
     msg = "Error on skip"
     res = empty
 
+
 testSqrt :: Comm -> Test
 testSqrt comm = TestCase $ assertEqual msg res (eval comm)
   where
     msg = "Error on sqrt computation"
     res = fromList [("i",5),("n",25),("t",25)]
+
 
 testFib :: Comm -> Test
 testFib comm = TestCase $ assertEqual msg res (eval comm)
