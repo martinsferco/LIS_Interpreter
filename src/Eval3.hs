@@ -25,10 +25,10 @@ lookfor var (m, t) =  case M.lookup var m of
 
 -- Cambia el valor de una variable en un estado
 update :: Variable -> Int -> State -> State
-update var n (m, t) = addTrace (showLet var n) (M.insert var n m, t)
+update var n (m, t) = (M.insert var n m, t)
 
 showLet :: Variable -> Int -> String
-showLet var n = "Let " ++ var ++ " " ++ show n ++ "\n"
+showLet var n = "Let " ++ var ++ " " ++ show n ++ " | "
 
 
 -- Agrega una traza dada al estado
@@ -52,7 +52,7 @@ stepCommStar c    s = do
 stepComm :: Comm -> State -> ComputationResult Comm
 stepComm (Let v e)            s = case evalExp e s of
                                     Left  err           -> Left   err
-                                    Right (n :!: s')    -> Right (Skip :!: update v n s')     
+                                    Right (n :!: s')    -> Right (Skip :!: addTrace (showLet v n) (update v n s'))  
 stepComm (Seq Skip c1)        s = Right (c1 :!: s)
 stepComm (Seq c0 c1)          s = case stepComm c0 s of
                                     Left  err           -> Left   err
