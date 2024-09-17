@@ -1,0 +1,22 @@
+n = 4; // N-esimo numero de fibonacci
+
+if n == 0 { result = 0 } else {
+if n == 1 { result = 1 } else {
+
+a = 0;
+b = 1;
+i = 2;
+
+repeat {
+
+    temp = a + b;
+    a = b;
+    b = temp;
+    i = i + 1
+
+} until i > n ;
+
+result = b
+
+}
+}
