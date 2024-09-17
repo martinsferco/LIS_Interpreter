@@ -19,7 +19,7 @@ initState = (M.empty, "")
 
 -- Busca el valor de una variable en un estado
 lookfor :: Variable -> State -> Either Error Int
-lookfor var (m, t) =  case M.lookup var m of
+lookfor var (m, _) =  case M.lookup var m of
                         Nothing -> Left  UndefVar
                         Just n  -> Right n
 
@@ -28,7 +28,7 @@ update :: Variable -> Int -> State -> State
 update var n (m, t) = (M.insert var n m, t)
 
 showLet :: Variable -> Int -> String
-showLet var n = "Let " ++ var ++ " " ++ show n ++ " | "
+showLet var n = "(Let " ++ var ++ " " ++ show n ++ ")"
 
 
 -- Agrega una traza dada al estado
