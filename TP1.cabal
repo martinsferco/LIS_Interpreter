@@ -85,6 +85,8 @@ test-suite TP1-test
   main-is: Main.hs
   other-modules:
       Eval1Tests
+      Eval2Tests
+      Eval3Tests
       ParserTests
       Paths_TP1
   autogen-modules:
