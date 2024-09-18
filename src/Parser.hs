@@ -72,7 +72,7 @@ factorParser =  try (do reservedOp lis "-"
 
 {- 
   En el parser atomParser, podriamos haber optimizado la funcion para que cuando
-  encontrara una variable, ahi se fijara si podia encontrar ++. -- o nada. De esta
+  encontrara una variable, ahi se fijara si podia encontrar ++, --, o nada. De esta
   manera no teniamos que volver a leer el identificador de la variable en cada
   intento. No lo hicimos ya que consideramos que de la manera que lo hicimos 
   era mucho mas legible y el codigo se entendia mucho mejor
@@ -117,7 +117,6 @@ atomBoolParser = (try (parens lis boolexp))                                     
 
 comm :: Parser Comm
 comm = chainl1 stmtParser ( do reservedOp lis ";" ; return Seq)
-
 
 stmtParser :: Parser Comm
 stmtParser = (try ( do { reserved lis "skip" ; return Skip } ))                                                 <|> 
