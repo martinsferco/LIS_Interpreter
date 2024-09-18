@@ -104,7 +104,7 @@ evalDiv e0 e1   s   = case evalExp e0 s of
 evalIncDec :: (Int -> Int) -> Variable -> State -> ComputationResult Int
 evalIncDec op x s   = case lookfor x s of
                         Left  err   ->  Left err
-                        Right v     ->  Right (v' :!: update x v' s)
+                        Right v     ->  Right (v' :!: addTrace (showLet x v') (update x v' s))
                                         where  v' = op v
 
 evalBin :: (a -> a -> b) -> Exp a -> Exp a -> State -> ComputationResult b
