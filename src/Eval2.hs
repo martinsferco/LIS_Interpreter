@@ -51,7 +51,7 @@ stepComm (Seq c0 c1)          s = case stepComm c0 s of
                                     Right (c0' :!: s')  -> Right ((Seq c0' c1) :!: s')
 stepComm (IfThenElse b c0 c1) s = case evalExp b s of
                                     Left  err           -> Left   err
-                                    Right (b' :!: s')   -> Right ((if b' then c0 else c1) :!: s')  -- los parentesis del if son necesarios??
+                                    Right (b' :!: s')   -> Right ((if b' then c0 else c1) :!: s')
 stepComm (RepeatUntil c b)    s = Right (Seq c c' :!: s)
                                   where c' = (IfThenElse b Skip (RepeatUntil c b)) 
 
